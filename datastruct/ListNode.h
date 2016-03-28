@@ -9,11 +9,11 @@ struct ListNode
     T data;
     Posi(T) pred;
     Posi(T) next;
-    ListNode()
-    {
+	ListNode() :data(NULL), pred(nullptr), next(nullptr)
+	{
 
-    }
-    ListNode(T e,Posi(T) p = NULL,Posi(T) n = NULL)
+	}
+    ListNode(T e,Posi(T) p = nullptr,Posi(T) n = nullptr)
     :data(e),pred(p),next(n)
     {
 
@@ -26,7 +26,7 @@ template<typename T>
 Posi(T) ListNode<T>::insertAsPred(T const& e)
 {
     Posi(T) newNode = new ListNode(e,pred,this);
-	if (pred!=NULL)
+	if (pred!=nullptr)
 	{
 		pred->next = newNode;
 	}
@@ -37,7 +37,7 @@ template <typename T>
 Posi(T) ListNode<T>::insertAsNext(T const& e)
 {
     Posi(T) newNode = new ListNode(e,this,next);
-	if (next != NULL)
+	if (next != nullptr)
 	{
 		next->pred = newNode;
 	}
