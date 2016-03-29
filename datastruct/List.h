@@ -12,7 +12,7 @@ protected:
 	void init(); //列表创建初始化 pass
 	int clear(); //清除所有节点  pass
 	void copyNodes(Posi(T), int);//复制列表中自位置p起的n项 pass
-	void merge(Posi(T)&, int, List<T>&, Posi(T), int); //合并
+	Posi(T) merge(Posi(T), int, Posi(T), int); //合并
 	void mergeSort(Posi(T), int);  //对从p开始连续的n个节点进行归并排序
 	void selectionSort(Posi(T), int);//对p开始的n个连续的节点进行选择排序pass
 	void insertionSort(Posi(T), int); //对从p开始的N个节点插入排序pass
@@ -283,7 +283,8 @@ template<typename T>
 void List<T>::sort(Posi(T) p, int n)
 {
 	//insertionSort(p, n);
-	selectionSort(p, n);
+	//selectionSort(p, n);
+	mergeSort(p, n);
 }
 
 template<typename T>
@@ -334,4 +335,62 @@ void List<T>::selectionSort(Posi(T) p, int n)
 		insertAsNext(p=selectMax(p, n), header);
 		p = p->next;
 	} while (n-->0);
+}
+
+template<typename T>//包括p在内的n个元素
+Posi(T) List<T>::merge(Posi(T) left_p, int left_len,Posi(T) right_p, int right_len)
+{
+	while (left_len > 0&&right_len > 0)
+	{
+		if (left_p->data < right_p->data)
+		{
+			left_p = left_p->next;
+			left_len--;
+		}
+		else
+		{
+			Posi(T) temp_p = right_p->next;
+			insertAsPre(right_p, left_p);
+			right_p = temp_p;
+			right_len--;
+		}
+	}
+	while (right_len-->0)
+	{
+		right_p = right_p->next;
+	}
+	return right_p;
+}
+
+template<typename T>
+void List<T>::mergeSort(Posi(T) p, int n)
+{
+	Posi(T) h = p->pred;
+	Posi(T) r_p;
+	for (int i = 1; i < n; i*=2)
+	{
+		p = h->next;
+		r_p = p;
+		int count = 0;
+		while (count*2<n)
+		{
+			int r_len = 0;
+			while (r_len<i&&r_p!=trailer)
+			{
+				r_p = r_p->next;
+				r_len++;
+				count++; //右链表移动的次数
+			}
+			if (r_p == trailer)
+			{
+				break;
+			}
+			if (count*2>n)
+			{
+				r_len = n%i;
+			}
+			p = merge(p, i, r_p, r_len);
+			r_p = p;
+		}
+	}
 }
